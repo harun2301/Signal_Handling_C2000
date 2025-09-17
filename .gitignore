@@ -4,6 +4,7 @@
 *.out
 *.exe
 *.elf
+*.eps
 
 # Dependencies 
 *.d
@@ -16,3 +17,6 @@ out/
 # Editor temp files
 *.swp
 *.tmp
+
+# Generated files
+*.dat

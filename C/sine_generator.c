@@ -34,13 +34,13 @@
 /**
  * 	Signals arrays
 */
-float 	sine[M];			// sine data array
+float 	sine[M];					// sine data array
 float 	rand_noise[M];		// random noise data array
 float 	noisy_sine[M];		// sine + random noise data array
-float 	min = -0.05;      	// lower bound for random noise
+float 	min = -0.05;      // lower bound for random noise
 float	max = 0.05;       	// higher bound for random noise
 int 	sine_Qi[M];         // sine in Qi format data array
-int 	n;					// counter for loops
+int 	n;									// counter for loops
 
 
 /**
@@ -61,20 +61,18 @@ int main(void){
 	create_sine();
 	create_signal_data_file(0,"pure_sine_f10.dat");
 
-	add_random_noise_to_sine();
-
 	sine_to_Qi(0,Q4);
-	create_signal_data_file(2,"pure_sine_Q4");
+	create_signal_data_file(2,"pure_sine_Q4.dat");
 	sine_to_Qi(0,Q10);
-	create_signal_data_file(2,"pure_sine_Q10");
+	create_signal_data_file(2,"pure_sine_Q10.dat");
 
 	add_random_noise_to_sine();
 	sine_to_Qi(1,Q8);
-	create_signal_data_file(1,"noisy_sine_Q8");
+	create_signal_data_file(2,"noisy_sine_Q8.dat");
 	sine_to_Qi(1,Q12);
-	create_signal_data_file(1,"noisy_sine_Q12");
+	create_signal_data_file(2,"noisy_sine_Q12.dat");
 
-	//system("gnuplot -p 'graf.gp'");
+	system("gnuplot -p 'graf.gp'");
 	
 	return 0;
 }
@@ -103,7 +101,7 @@ void create_sine(){
  * @retval 	None
 */
 void sine_to_Qi(int which, int qi){
-	if(which == 0){			// converts pure sine
+	if(which == 0){					// converts pure sine
 		for(n=0; n<M-1; n++)		
 			sine_Qi[n] = float_to_Qi(qi, sine[n]);
 
@@ -141,13 +139,13 @@ void create_signal_data_file(int which, const char *filename){
         perror("Error opening file");
     }else{
 
-		if(which == 0){								//	saves pure sine in float
+		if(which == 0){										//	saves pure sine in float
 			for(n=0; n<M-1; n++)
 				fprintf(write, "%2.6f\n", sine[n]);
 
 		} else if(which == 1){						//	saves noisy_sine in float
 			for(n=0; n<M-1; n++)		
-				fprintf(write, "%2.6f\n", sine[n]);
+				fprintf(write, "%2.6f\n", noisy_sine[n]);
 	
 		} else if(which == 2){						// saves sine_Qi (either pure or noisy)
 			for(n=0; n<M-1; n++)		
