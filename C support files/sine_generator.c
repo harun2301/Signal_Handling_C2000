@@ -38,7 +38,7 @@ float 	sine[M];					// sine data array
 float 	rand_noise[M];		// random noise data array
 float 	noisy_sine[M];		// sine + random noise data array
 float 	min = -0.05;      // lower bound for random noise
-float	max = 0.05;       	// higher bound for random noise
+float		max = 0.05;      	// higher bound for random noise
 int 	sine_Qi[M];         // sine in Qi format data array
 int 	n;									// counter for loops
 
@@ -59,20 +59,22 @@ void create_signal_data_file(int which, const char *filename);
 int main(void){
 
 	create_sine();
-	create_signal_data_file(0,"pure_sine_f10.dat");
+	//create_signal_data_file(0,"pure_sine_f10.dat");
 
-	sine_to_Qi(0,Q4);
-	create_signal_data_file(2,"pure_sine_Q4.dat");
-	sine_to_Qi(0,Q10);
-	create_signal_data_file(2,"pure_sine_Q10.dat");
+	//sine_to_Qi(0,Q4);
+	//create_signal_data_file(2,"pure_sine_Q4.dat");
+	//sine_to_Qi(0,Q10);
+	//create_signal_data_file(2,"pure_sine_Q10.dat");
+	//sine_to_Qi(0,Q12);
+	//create_signal_data_file(2,"pure_sine7_Q12.dat");
 
 	add_random_noise_to_sine();
-	sine_to_Qi(1,Q8);
-	create_signal_data_file(2,"noisy_sine_Q8.dat");
 	sine_to_Qi(1,Q12);
-	create_signal_data_file(2,"noisy_sine_Q12.dat");
+	create_signal_data_file(2,"noisy_sinef10_Q12.dat");
+	//sine_to_Qi(1,Q12);
+	//create_signal_data_file(2,"noisy_sine_Q12.dat");
 
-	system("gnuplot -p 'graf.gp'");
+	//system("gnuplot -p 'graf.gp'");
 	
 	return 0;
 }
