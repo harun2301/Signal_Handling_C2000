@@ -8,10 +8,10 @@
 
 pal		.set	16			; las palabras son de 16 bits
 N 		.set 	1000		; define N = 1000 = constante
-n		.set 	1			; 2 octavo
+n		.set 	0			; 1 octavo
 
 p8	   	.word	0
-semis	.word	14			; f0=7, 14 semiciclos
+semis	.word	20			; f0=10, 20 semiciclos
 seno   	.space  pal*N
 troz 	.space  pal*N
 
@@ -71,11 +71,22 @@ TROZA	MOV		AR7,	*XAR1++
 		BANZ 	TROZA,	AR0--
 
 	; Avanza al siguiente semiciclo
-COMP2	MOV 	AL,		#0				; AL = 0
-	  	CMP 	AL,		*XAR1			; 0 - XAR1
-		BF 		SIG,	NEQ				; si XAR0 != 0, aun no cambia de semi-ciclo
+		MOV     AL,		*XAR1++       	; AL = primer valor
+		MOV		AR7,	*XAR2++			; va avanzando el XAR2 en la senal troceada
+        MOV     AH,     AL            	; AH = valor anterior
 
-		BANZ 	SEMI	,AR3--
+LOOP    MOV     AL,     *XAR1++       	; AL = valor actual
+		MOV		AR7,	*XAR2++			; va avanzando el XAR2 en la senal troceada
+        MOV     T,      AL            	; copia AL a T
+        XOR     T,      AH            	; T = AL XOR AH
+        AND     T,      #0x8000       	; aísla el bit de signo
+        BF      OTRO,	NEQ      		; si bit 15 cambió, salta
+
+        ; No cambió de signo:
+        MOV     AH,     AL				; actualiza valor anterior
+        BF      LOOP,   UNC
+
+OTRO	BANZ 	SEMI	,AR3--
 
 
 REGRESA NOP
@@ -89,10 +100,6 @@ POSIT	MOV		AL,		#1				; carga Al con 1
 		ADD		ACC,	@p8				; ACC = ACC + p8
 		MOV		@p8,	AL				; p8 = ACC
 		LC		COMP1					; vuelve a comparar
-
-SIG		MOV		AR7,	*XAR1++			; va avanzando el XAR1 en el seno original
-		MOV		AR7,	*XAR2++			; va avanzando el XAR2 en la senal troceada
-		LC		COMP2					; vuelve a comparar
 
 
 .end
