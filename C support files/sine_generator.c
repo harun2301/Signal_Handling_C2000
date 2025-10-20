@@ -25,7 +25,7 @@
 */
 #define	M	1000				// no. of samples
 #define f0	10 				// natural frequency
-#define A 	2					// amplitude
+#define A 	1					// amplitude
 #define pi 	3.141592	// pi constant
 
 
@@ -76,8 +76,8 @@ int main(void){
 	//create_signal_data_file(2,"data_files/pure_sine7_Q12.dat");
 
 	add_random_noise_to_sine();
-	sine_to_Qi(1,Q12);
-	create_signal_data_file(2,"data_files/noisy_sinef10_Q12.dat");
+	//sine_to_Qi(1,Q12);
+	create_signal_data_file(1,"data_files/noisy_sinef10_float.dat");
 	//sine_to_Qi(1,Q12);
 	//create_signal_data_file(2,"data_files/noisy_sine_Q12.dat");
 
@@ -97,7 +97,7 @@ int main(void){
  * @retval 	None
 */
 void create_sine(){
-	for(n=0; n<M-1; n++){
+	for(n=0; n<M; n++){
         sine[n] = A*sin(2*pi*f0*n/M);
     }
 }
@@ -111,11 +111,11 @@ void create_sine(){
 */
 void sine_to_Qi(int which, int qi){
 	if(which == 0){					// converts pure sine
-		for(n=0; n<M-1; n++)		
+		for(n=0; n<M; n++)		
 			sine_Qi[n] = float_to_Qi(qi, sine[n]);
 
 	} else if(which == 1){	// converts noisy sine
-		for(n=0; n<M-1; n++)		
+		for(n=0; n<M; n++)		
 			sine_Qi[n] = float_to_Qi(qi, noisy_sine[n]);
 	}
 }
@@ -128,7 +128,7 @@ void sine_to_Qi(int which, int qi){
 void add_random_noise_to_sine(){
 	srand(time(NULL));
 
-	for(n=0; n<M-1; n++){
+	for(n=0; n<M; n++){
     	rand_noise[n] = min + ((float)rand() / RAND_MAX) * (max - min);
 		noisy_sine[n] = sine[n] + rand_noise[n];
 	}
@@ -137,8 +137,8 @@ void add_random_noise_to_sine(){
 
 /**
   *	@brief	Creates a .dat file with a signal points
-  *	@param 	filename name + extension of the file to be created
   * @param 	which elects either pure sine (0) or noisy_sine (1) or sine_Qi (2) to save into file
+  *	@param 	filename name + extension of the file to be created
   * @retval None
 */
 void create_signal_data_file(int which, const char *filename){
@@ -149,15 +149,15 @@ void create_signal_data_file(int which, const char *filename){
     }else{
 
 		if(which == 0){										//	saves pure sine in float
-			for(n=0; n<M-1; n++)
+			for(n=0; n<M; n++)
 				fprintf(write, "%2.6f\n", sine[n]);
 
 		} else if(which == 1){						//	saves noisy_sine in float
-			for(n=0; n<M-1; n++)		
+			for(n=0; n<M; n++)		
 				fprintf(write, "%2.6f\n", noisy_sine[n]);
 	
 		} else if(which == 2){						// saves sine_Qi (either pure or noisy)
-			for(n=0; n<M-1; n++)		
+			for(n=0; n<M; n++)		
 				fprintf(write, "%d\n", sine_Qi[n]);
 		}
 	
